@@ -9,7 +9,7 @@
 **Usage**
 
 ```
-python3 portBuster.py -t <TARGET_MACHINE_IP> -p <Boolean for ping scans> -T <No. if threads>
+python3 portBuster.py -t <TARGET_MACHINE_IP> -p <Boolean for ping scans> -T <No. of threads>
 ```
 
 ![](./images/usage.png)
