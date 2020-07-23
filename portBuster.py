@@ -17,7 +17,7 @@ def get_arguments():
                       help="Target Host (required)")
     parser.add_option("-p", "--ping", dest="ping",
                       help="Ping The Host 0 or 1 default 1 (optional)")
-    parser.add_option("-T", "--ping", dest="threads",
+    parser.add_option("-T", "--threads", dest="threads",
                       help="No. of threads default 100 (optional)")
     (options, arguments) = parser.parse_args()
     if not options.host:
@@ -41,7 +41,13 @@ def ping_scan(host):
     return output["rtt_max"]*0.001
 
 
-def mapper(host, timeout):
+def intro(host, ping, threads):
+    print(f"Target machine set to: {host}")
+    print(f"Ping is set to:        {ping}")
+    print(f"Total threads set to:  {threads}")
+
+
+def mapper(host, timeout, threads):
     print(
         f'Performing port scan on {host} with default timeout set to {str(timeout)}')
 
@@ -52,7 +58,7 @@ def mapper(host, timeout):
             con = s.connect((host, port))
 
             with print_lock:
-                print(f'port {port} is open')
+                print(f"{port} is OPEN")
             con.close()
         except:
             pass
@@ -65,7 +71,7 @@ def mapper(host, timeout):
 
     q = Queue()
 
-    for x in range(500):
+    for x in range(int(threads)):
         t = threading.Thread(target=threader)
         t.daemon = True
         t.start()
@@ -81,18 +87,22 @@ def main():
     host = options.host
     ping = options.ping
     threads = options.threads
-    print('Starting Ping Scan')
-    print("-"*60)
-    timeout = round(ping_scan(host), 3)
-    print(f'Ping scan finished timeout set to {round(timeout, 3)} ms')
+    intro(host, ping, threads)
+    if ping:
+        print('Starting Ping Scan...')
+        print("-"*60)
+        timeout = round(ping_scan(host), 3)
+        print(f'Ping scan finished average timeout: {round(timeout, 3)} ms')
+        ans = input('Press y/n to set default timeout: ')
+
     print('-'*60)
-    ans = input('Press y/n to set default timeout: ')
+    # Port Scan
     if ans == 'y' or ans == 'Y':
         print('Starting Port scan')
-        mapper(host, timeout)
+        mapper(host, timeout, threads)
     elif ans == 'n' or ans == 'N':
         timeout = None
-        mapper(host, timeout)
+        mapper(host, timeout, threads)
     else:
         print('Invalid Input')
 
