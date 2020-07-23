@@ -21,7 +21,8 @@ def get_arguments():
                       help="No. of threads default 100 (optional)")
     (options, arguments) = parser.parse_args()
     if not options.host:
-        parser.error("[-] Please specify a target host")
+        parser.error(
+            "[-] Please specify a target host as -t <TARGET_MACHINE_IP>")
     if not options.ping:
         options.ping = 1
     if not options.threads:
@@ -34,11 +35,12 @@ def ping_scan(host):
     transmitter = pingparsing.PingTransmitter()
     transmitter.destination = host
     transmitter.count = 5
-    result = transmitter.ping()
-
-    output = json.loads(json.dumps(ping_parser.parse(result).as_dict()))
-
-    return output["rtt_max"]*0.001
+    try:
+        result = transmitter.ping()
+        output = json.loads(json.dumps(ping_parser.parse(result).as_dict()))
+        return output["rtt_max"]*0.001
+    except:
+        pass
 
 
 def intro(host, ping, threads):
@@ -88,28 +90,40 @@ def main():
     ping = options.ping
     threads = options.threads
     intro(host, ping, threads)
-    if ping:
+    print("-"*60)
+    if int(ping):
         print('Starting Ping Scan...')
-        print("-"*60)
-        timeout = round(ping_scan(host), 3)
-        print(f'Ping scan finished average timeout: {round(timeout, 3)} ms')
-        ans = input('Press y/n to set default timeout: ')
 
-    print('-'*60)
-    # Port Scan
-    if ans == 'y' or ans == 'Y':
-        print('Starting Port scan')
-        mapper(host, timeout, threads)
-    elif ans == 'n' or ans == 'N':
-        timeout = None
-        mapper(host, timeout, threads)
+        timeout = ping_scan(host)
+
+        if timeout == None:
+            print("-"*60)
+            print("Target Machine isn't up or isn't responding to ping")
+            print('Please try with -p 0 to skip ping scan')
+            print('Quitting...')
+        else:
+            print(
+                f'Ping scan finished average timeout: {round(timeout, 3)} ms')
+            ans = input('Press y/n to set default timeout: ')
+
+            print('-'*60)
+            # Port Scan
+            if ans == 'y' or ans == 'Y':
+                print('Starting Port scan')
+                mapper(host, timeout, threads)
+            elif ans == 'n' or ans == 'N':
+                timeout = None
+                mapper(host, timeout, threads)
+            else:
+                print('Invalid Input')
     else:
-        print('Invalid Input')
+        mapper(host, None, threads)
 
 
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print('Quitting')
-        sys.exit()
+        print()
+        print('Keyboard Interruption detected')
+        sys.exit('Quitting....')
