@@ -1,4 +1,4 @@
-# PORTBUSTER (WIP)
+# PORTBUSTER
 
 ### Multithreader Port Scanner with automated ping scan
 
