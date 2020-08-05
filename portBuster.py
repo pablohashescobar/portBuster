@@ -1,5 +1,6 @@
 import socket
 import sys
+import os
 import threading
 from queue import Queue
 import time
@@ -7,10 +8,13 @@ import subprocess
 import optparse
 import json
 import pingparsing
+from datetime import datetime
+
 
 print_lock = threading.Lock()
 toolbar_width = 40
 open_ports = []
+nmap_ports = []
 
 #get user input
 def get_arguments():
@@ -76,7 +80,7 @@ def update_progress(progress):
 def mapper(host, timeout, threads):
     print(
         f'Performing port scan on {host} with default timeout set to {str(timeout)}')
-
+    print('='*100)
     def scanner(port):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         socket.setdefaulttimeout(timeout)
@@ -86,9 +90,9 @@ def mapper(host, timeout, threads):
             con = s.connect((host, port))
             
             with print_lock:
-                print(f"port {port} is OPEN")
+                print(f"     port {port} is OPEN")
 
-                open_ports.append(port)
+                open_ports.append(str(port))
             if con: 
                 con.close()
         except socket.error:
@@ -115,6 +119,28 @@ def mapper(host, timeout, threads):
 
     q.join()
 
+#Nmap
+def nmap_scanner(host):
+    print("="*150)
+    mc_ports = ",".join(nmap_ports)
+    print(f"Starting nmap scans on ports {mc_ports}")
+    print("="*150)
+    os.mkdir("nmap")
+    subprocess.call(["nmap", "-p", mc_ports, "-A", "-oN", "nmap/initial", host])
+
+#Print Ports
+def print_open_ports(open_ports):
+    
+    port_list = [int(i) for i in (open_ports)]
+    length = len(port_list)
+    port_list.sort()
+    print(f"Total {length} ports are open")
+    print()
+   
+    for p in port_list:
+        print(f"Port {p} is open")
+        nmap_ports.append(str(p))
+
 #Main
 def main():
     options = get_arguments()
@@ -122,14 +148,14 @@ def main():
     ping = options.ping
     threads = options.threads
     intro(host, ping, threads)
-    print("-"*60)
+    print("="*100)
     if int(ping):
         print('Starting Ping Scan...')
 
         timeout = ping_scan(host)
 
         if timeout == None:
-            print("-"*60)
+            print("="*100)
             print("Target Machine isn't up or isn't responding to ping")
             print('Please try with -p 0 to skip ping scan')
             print('Quitting...')
@@ -138,21 +164,41 @@ def main():
                 f'Ping scan finished average timeout: {round(timeout, 3)} ms')
             ans = input('Press y/n to set default timeout: ')
             timeout = round(timeout, 3)
-            print('-'*60)
+            print('='*100)
+            t1 = datetime.now()
+            print(f'Starting Port scan on {t1}')
+            
             # Port Scan
             if ans == 'y' or ans == 'Y':
-                print('Starting Port scan')
                 mapper(host, timeout, threads)
-                print(open_ports)
+                print()
+                t2 = datetime.now()
+                print(f"Scan Completed in {t2-t1}")
+                print('='*100)
+                print_open_ports(open_ports)
+                nmap_scanner(host)
             elif ans == 'n' or ans == 'N':
                 timeout = None
                 mapper(host, timeout, threads)
-                print(open_ports)
+                print()
+                t2 = datetime.now()
+                print()
+                print(f"Scan Completed {t2-t1}")
+                print('='*100)
+                print_open_ports(open_ports)
+                nmap_scanner(host)
             else:
                 print('Invalid Input')
     else:
+        t1 = datetime.now()
         mapper(host, None, threads)
-
+        print()
+        t2 = datetime.now()
+        print()
+        print(f"Scan Completed {t2-t1}")
+        print('='*100)
+        print_open_ports(open_ports)
+        nmap_scanner(host)
 
 if __name__ == "__main__":
     try:
