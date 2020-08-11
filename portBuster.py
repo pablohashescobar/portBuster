@@ -1,3 +1,14 @@
+#!/usr/bin/env python3
+
+#------------------------------------------------DISCLAIMER----------------------------------------------------------
+#
+#Usage of this tool for attacking targets without 
+#prior mutual consent is illegal. It is the end user’s responsibility
+#to obey all applicable local, state and federal laws.
+#I assume no liability and are not responsible for any misuse or damage caused by this tool.
+#
+#--------------------------------------------------------------------------------------------------------------------
+
 import socket
 import sys
 import os
@@ -97,7 +108,7 @@ def mapper(host, timeout, threads):
                 con.close()
         except socket.error:
             pass
-
+    #Threading
     def threader():
         while True:
             worker = q.get()
@@ -111,13 +122,14 @@ def mapper(host, timeout, threads):
         t = threading.Thread(target=threader)
         t.daemon = True
         t.start()
-    # setup toolbar
+  
 
     for worker in range(1, 65535):
         q.put(worker)
    
 
     q.join()
+
 
 #Nmap
 def nmap_scanner(host):

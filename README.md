@@ -7,7 +7,7 @@
 
 #### Requirements: pingparsing
 
-`pip3 install pingparsing`
+`pip3 install -r requirements.txt`
 
 **Usage**
 
