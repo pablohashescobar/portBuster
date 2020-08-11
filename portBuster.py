@@ -1,3 +1,18 @@
+#!/usr/bin/env python3
+
+# --------------------------------------------DISCLAIMER-------------------------------------------------------
+#
+#Usage of this tools for attacking targets 
+# without prior mutual consent is illegal. 
+# It is the end user’s responsibility to 
+# obey all applicable local, state and federal laws. 
+# I assume no liability and is not responsible 
+# for any misuse or damage caused by this tool.
+#
+#-----------------------------------------------------------------------------------------------------
+
+
+
 import socket
 import sys
 import os
@@ -44,11 +59,11 @@ def ping_scan(host):
     try:
         result = transmitter.ping()
         output = json.loads(json.dumps(ping_parser.parse(result).as_dict()))
-        return output["rtt_max"]*0.001
+        return output["rtt_max"]*0.001 #return output in seconds
     except:
         pass
 
-#Banner
+#Intro Banner
 def intro(host, ping, threads):
     print(f"Target machine set to: {host}")
     print(f"Ping is set to:        {ping}")
@@ -91,13 +106,13 @@ def mapper(host, timeout, threads):
             
             with print_lock:
                 print(f"     port {port} is OPEN")
-
+                #Print the ports with the progress bar
                 open_ports.append(str(port))
             if con: 
                 con.close()
         except socket.error:
             pass
-
+    #Threading Function
     def threader():
         while True:
             worker = q.get()
@@ -111,7 +126,7 @@ def mapper(host, timeout, threads):
         t = threading.Thread(target=threader)
         t.daemon = True
         t.start()
-    # setup toolbar
+   
 
     for worker in range(1, 65535):
         q.put(worker)
@@ -119,7 +134,9 @@ def mapper(host, timeout, threads):
 
     q.join()
 
-#Nmap
+
+
+#Nmap Scan
 def nmap_scanner(host):
     print("="*150)
     mc_ports = ",".join(nmap_ports)
@@ -127,6 +144,7 @@ def nmap_scanner(host):
     print("="*150)
     os.mkdir("nmap")
     subprocess.call(["nmap", "-p", mc_ports, "-A", "-oN", "nmap/initial", host])
+
 
 #Print Ports
 def print_open_ports(open_ports):
