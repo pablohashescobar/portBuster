@@ -1,6 +1,9 @@
 # PORTBUSTER
 
-### Multithreader Port Scanner with automated ping scan
+### Multithreader Port Scanner with automated ping scan and nmap scan
+
+#### Update 1: nmap integration done
+
 
 #### Requirements: pingparsing
 
