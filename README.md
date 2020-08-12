@@ -3,7 +3,7 @@
 ### Multithreader Port Scanner with automated ping scan and nmap scan
 
 #### Update 1: Nmap integration done
-#### Update 2: Docker integration done
+#### Update 2: Docker integration (WIP)
 
 #### Requirements: pingparsing, pyfiglet
 
