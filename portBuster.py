@@ -34,6 +34,8 @@ def get_arguments():
     ascii_banner = pyfiglet.figlet_format("Port Buster")
     print(ascii_banner)
     print("="*100)
+    print("Enter the required values..")
+    print()
     host = input("Target Machine IP Address: ")
     ping = int(input("Ping Scan (0 or 1): "))
     threads = int(input("Amount of threads : "))
