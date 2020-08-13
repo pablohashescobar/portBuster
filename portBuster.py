@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+<<<<<<< HEAD
 # --------------------------------------------DISCLAIMER-------------------------------------------------------
 #
 #Usage of this tools for attacking targets 
@@ -12,6 +13,16 @@
 #-----------------------------------------------------------------------------------------------------
 
 
+=======
+#------------------------------------------------DISCLAIMER----------------------------------------------------------
+#
+#Usage of this tool for attacking targets without 
+#prior mutual consent is illegal. It is the end user’s responsibility
+#to obey all applicable local, state and federal laws.
+#I assume no liability and are not responsible for any misuse or damage caused by this tool.
+#
+#--------------------------------------------------------------------------------------------------------------------
+>>>>>>> b0851dc6179b11fcc203d04ccd4ee1773e542854
 
 import socket
 import sys
@@ -20,7 +31,7 @@ import threading
 from queue import Queue
 import time
 import subprocess
-import optparse
+import pyfiglet
 import json
 import pingparsing
 from datetime import datetime
@@ -30,25 +41,21 @@ print_lock = threading.Lock()
 toolbar_width = 40
 open_ports = []
 nmap_ports = []
-
+host  = ""
+ping = 1
+threads = 200
 #get user input
 def get_arguments():
-    parser = optparse.OptionParser()
-    parser.add_option("-t", "--target", dest="host",
-                      help="Target Host (required)")
-    parser.add_option("-p", "--ping", dest="ping",
-                      help="Ping The Host 0 or 1 default 1 (optional)")
-    parser.add_option("-T", "--threads", dest="threads",
-                      help="No. of threads default 200 (optional)")
-    (options, arguments) = parser.parse_args()
-    if not options.host:
-        parser.error(
-            "[-] Please specify a target host as -t <TARGET_MACHINE_IP>")
-    if not options.ping:
-        options.ping = 1
-    if not options.threads:
-        options.threads = 200
-    return options
+    ascii_banner = pyfiglet.figlet_format("Port Buster")
+    print(ascii_banner)
+    print("="*100)
+    print("Enter the required values..")
+    print()
+    host = input("Target Machine IP Address: ")
+    ping = int(input("Ping Scan (0 or 1): "))
+    threads = int(input("Amount of threads : "))
+    return host, ping, threads
+
 
 #ping scan
 def ping_scan(host):
@@ -65,6 +72,7 @@ def ping_scan(host):
 
 #Intro Banner
 def intro(host, ping, threads):
+    print("="*68 + " PORT BUSTER " +"="*69)
     print(f"Target machine set to: {host}")
     print(f"Ping is set to:        {ping}")
     print(f"Total threads set to:  {threads}")
@@ -112,7 +120,11 @@ def mapper(host, timeout, threads):
                 con.close()
         except socket.error:
             pass
+<<<<<<< HEAD
     #Threading Function
+=======
+    #Threading
+>>>>>>> b0851dc6179b11fcc203d04ccd4ee1773e542854
     def threader():
         while True:
             worker = q.get()
@@ -126,7 +138,11 @@ def mapper(host, timeout, threads):
         t = threading.Thread(target=threader)
         t.daemon = True
         t.start()
+<<<<<<< HEAD
    
+=======
+  
+>>>>>>> b0851dc6179b11fcc203d04ccd4ee1773e542854
 
     for worker in range(1, 65535):
         q.put(worker)
@@ -135,8 +151,12 @@ def mapper(host, timeout, threads):
     q.join()
 
 
+<<<<<<< HEAD
 
 #Nmap Scan
+=======
+#Nmap
+>>>>>>> b0851dc6179b11fcc203d04ccd4ee1773e542854
 def nmap_scanner(host):
     print("="*150)
     mc_ports = ",".join(nmap_ports)
@@ -161,10 +181,8 @@ def print_open_ports(open_ports):
 
 #Main
 def main():
-    options = get_arguments()
-    host = options.host
-    ping = options.ping
-    threads = options.threads
+    host, ping, threads = get_arguments()
+
     intro(host, ping, threads)
     print("="*100)
     if int(ping):

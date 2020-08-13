@@ -2,15 +2,19 @@
 
 ### Multithreader Port Scanner with automated ping scan and nmap scan
 
-#### Update 1: nmap integration done
+#### Update 1: Nmap integration done
+#### Update 2: Docker integration (WIP)
 
+#### Requirements: pingparsing, pyfiglet
 
-#### Requirements: pingparsing
+`pip3 install -r requirements.txt`
 
-`pip3 install pingparsing`
+#### Docker
+*In the portBuster directory*
 
-**Usage**
+`docker build --tag port-buster .`
 
+<<<<<<< HEAD
 ```
 python3 portBuster.py -t <TARGET_MACHINE_IP> -p <Boolean for ping scans> -T <No. of threads>
 ```
@@ -22,3 +26,8 @@ ln -s $(pwd)/portBuster.py /usr/local/bin/portBuster
 ```
 
 
+=======
+`docker run -it port-buster`
+
+![](./images/sample.png)
+>>>>>>> b0851dc6179b11fcc203d04ccd4ee1773e542854
