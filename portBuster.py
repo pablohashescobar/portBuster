@@ -1,19 +1,5 @@
 #!/usr/bin/env python3
 
-<<<<<<< HEAD
-# --------------------------------------------DISCLAIMER-------------------------------------------------------
-#
-#Usage of this tools for attacking targets 
-# without prior mutual consent is illegal. 
-# It is the end user’s responsibility to 
-# obey all applicable local, state and federal laws. 
-# I assume no liability and is not responsible 
-# for any misuse or damage caused by this tool.
-#
-#-----------------------------------------------------------------------------------------------------
-
-
-=======
 #------------------------------------------------DISCLAIMER----------------------------------------------------------
 #
 #Usage of this tool for attacking targets without 
@@ -22,7 +8,6 @@
 #I assume no liability and are not responsible for any misuse or damage caused by this tool.
 #
 #--------------------------------------------------------------------------------------------------------------------
->>>>>>> b0851dc6179b11fcc203d04ccd4ee1773e542854
 
 import socket
 import sys
@@ -120,11 +105,7 @@ def mapper(host, timeout, threads):
                 con.close()
         except socket.error:
             pass
-<<<<<<< HEAD
-    #Threading Function
-=======
     #Threading
->>>>>>> b0851dc6179b11fcc203d04ccd4ee1773e542854
     def threader():
         while True:
             worker = q.get()
@@ -138,11 +119,7 @@ def mapper(host, timeout, threads):
         t = threading.Thread(target=threader)
         t.daemon = True
         t.start()
-<<<<<<< HEAD
-   
-=======
   
->>>>>>> b0851dc6179b11fcc203d04ccd4ee1773e542854
 
     for worker in range(1, 65535):
         q.put(worker)
@@ -151,12 +128,7 @@ def mapper(host, timeout, threads):
     q.join()
 
 
-<<<<<<< HEAD
-
-#Nmap Scan
-=======
 #Nmap
->>>>>>> b0851dc6179b11fcc203d04ccd4ee1773e542854
 def nmap_scanner(host):
     print("="*150)
     mc_ports = ",".join(nmap_ports)
