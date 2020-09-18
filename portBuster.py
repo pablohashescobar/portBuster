@@ -57,7 +57,7 @@ def ping_scan(host):
 
 #Intro Banner
 def intro(host, ping, threads):
-    print("="*68 + " PORT BUSTER " +"="*69)
+    print("="*43 + " PORT BUSTER " +"="*44)
     print(f"Target machine set to: {host}")
     print(f"Ping is set to:        {ping}")
     print(f"Total threads set to:  {threads}")
@@ -130,10 +130,15 @@ def mapper(host, timeout, threads):
 
 #Nmap
 def nmap_scanner(host):
-    print("="*150)
+    print("="*100)
     mc_ports = ",".join(nmap_ports)
+    if os.path.exists("nmap/initial"):
+        os.remove("nmap/initial")
+        os.rmdir("nmap")
+    elif os.path.isdir('nmap'):
+        os.rmdir('nmap')        
     print(f"Starting nmap scans on ports {mc_ports}")
-    print("="*150)
+    print("="*100)
     os.mkdir("nmap")
     subprocess.call(["nmap", "-p", mc_ports, "-A", "-oN", "nmap/initial", host])
 
